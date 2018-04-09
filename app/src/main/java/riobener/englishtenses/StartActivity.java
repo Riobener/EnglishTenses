@@ -25,12 +25,7 @@ public class StartActivity extends AppCompatActivity {
         TensesGrid = (GridView)findViewById(R.id.gridview);
         GridView gridview = (GridView) findViewById(R.id.gridview);
         gridview.setAdapter(new ButtonAdapter(this));
-        TensesGrid.setOnItemClickListener(new AdapterView.OnItemClickListener() {
-            @Override
-            public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
-                Toast.makeText(StartActivity.this,"Hello",Toast.LENGTH_LONG);
-            }
-        });
+
 
 
 
