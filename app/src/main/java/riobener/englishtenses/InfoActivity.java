@@ -29,7 +29,46 @@ public class InfoActivity extends AppCompatActivity {
         title = intentFrom.getStringExtra("title");
         setTitle(title);
         mText = (TextView)findViewById(R.id.theoryTxt);
-        mText.setText(getText(R.string.large_text));
+        switch (title){
+            case "Past Simple":
+                mText.setText(getText(R.string.Past_Simple));
+                break;
+            case "Present Simple":
+                mText.setText(getText(R.string.Present_Simple));
+                break;
+            case "Future Simple":
+                mText.setText(getText(R.string.Future_Simple));
+                break;
+            case "Past Continuous":
+                mText.setText(getText(R.string.Past_Continuous));
+                break;
+            case "Present Continuous":
+                mText.setText(getText(R.string.Present_Continuous));
+                break;
+            case "Future Continuous":
+                mText.setText(getText(R.string.Future_Continuous));
+                break;
+            case "Past Perfect":
+                mText.setText(getText(R.string.Past_Perfect));
+                break;
+            case "Present Perfect":
+                mText.setText(getText(R.string.Present_Perfect));
+                break;
+            case "Future Perfect":
+                mText.setText(getText(R.string.Future_Perfect));
+                break;
+            case "Past Perfect Continuous":
+                mText.setText(getText(R.string.Past_Perfect_Continuous));
+                break;
+            case "Present Perfect Continuous":
+                mText.setText(getText(R.string.Present_Perfect_Continuous));
+                break;
+            case "Future Perfect Continuous":
+                mText.setText(getText(R.string.Future_Perfect_Continuous));
+                break;
+        }
+
+
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);

@@ -4,17 +4,44 @@
     <string name="past_simple">
 
     </string>
-    <string name="large_text">
-
-        "Material is the metaphor.\n\n"
-
-         "A material metaphor is the unifying theory of a rationalized space and a system of motion."
-
-
-
-
-
-
+    <string name="Present_Simple">
+       "<b>Present Simple</b>- время в английском языке.
+        Главным составляющим этого времени заключается в периодичности,те когда люди рассказывают о своих регулярных действиях,привычках."
     </string>
+    <string name="Present_Continuous">
+       "<b>Present Continuous</b>- время в английском языке,которое описывает действия, происходящим в настоящий момент."
+    </string>
+    <string name="Present_Perfect">
+       "<b>Present Perfect</b>- время в английском языке,обозначающее дейсвия, которые закончились к данному моменту либо завершилось в период настоящего времени "
+    </string>
+    <string name="Present_Perfect_Continuous">
+       "<b>Present Perfect Continuous</b>- это настоящее совершенное длительное время, используется для выражения действия или события, которое началось в прошлом и продолжалось некоторе время до настоящего момента разговора и может продолжаться в момент речи, либо закончилось перед разговором."
+</string>
+    <string name="Past_Simple">
+       "<b>Past Simple</b>- одно из времен в английском языке, обозначаетщее действия произошедших в прошлом."
+    </string>
+    <string name="Past_Continuous">
+       "<b>Past Continuous</b>- время обозначающее действие произошедшим в прошлом длительное время."
+    </string>
+    <string name="Past_Perfect">
+       "<b>Past perfect</b>- одна из временных форма английского языка,которое указывает на действия, которое завершилось до некоего момена."
+    </string>
+    <string name="Past_Perfect_Continuous">
+       "<b>Past Perfect Continuous</b>- время в английском языке, указывающее на действия,которые начались в прошлом  и  продолжались в течение некоторого времени или закончились непосредственно перед определенным моментом."
+    </string>
+    <string name="Future_Simple">
+       "<b>Future Simple</b>- простое будущее время, обозначающее однократные,периодические либо постоянные действия или события, которое произойдет в неопределенном или отдаленном будущем."
+    </string>
+    <string name="Future_Continuous">
+       "<b>Future Continuous</b>- время в английском языке.
+        Главным составляющим этого времени заключается в периодичности,те когда люди рассказывают о своих регулярных действиях,привычках."
+    </string>
+    <string name="Future_Perfect">
+       "<b>Future Perfect</b>- время в английском,выражающее действия или события, которые закончится до определенного момента в будущем."
+    </string>
+    <string name="Future_Perfect_Continuous">
+       "<b>Future Perfect Continuous</b>- будущее совершенное длительное время обозначающее длительное действие, которое началось и продолжалось в течение некоторого времени до некого момента в будущем."
+    </string>
+
     <string name="action_settings">Settings</string>
 </resources>

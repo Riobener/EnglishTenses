@@ -5,6 +5,23 @@
         <gradient
             android:angle="90"
             android:endColor="#C4C1C1"
+            android:startColor="#FFF"/>
+        <stroke
+            android:width="2dp"
+            android:color="#4F4F4F"/>
+        <corners
+            android:radius="10dp">
+        </corners>
+
+
+    </shape>
+
+</item>
+    <item android:state_active="false">
+        <shape>
+        <gradient
+            android:angle="90"
+            android:endColor="#C4C1C1"
             android:startColor="#f5eeee"/>
         <stroke
             android:width="2dp"
@@ -15,7 +32,8 @@
 
 
     </shape>
-</item>
+    </item>
+
     <item>
         <shape>
             <stroke

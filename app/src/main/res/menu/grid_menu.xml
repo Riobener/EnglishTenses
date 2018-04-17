@@ -4,5 +4,5 @@
     android:title="Теория"></item>
 
     <item android:id="@+id/advices"
-        android:title="Советы"></item>
+        android:title="Советы (В процессе разроботки...)"></item>
     </menu>
