@@ -1,15 +1,24 @@
 package riobener.englishtenses;
 
+
+import android.app.AlertDialog;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.pm.ActivityInfo;
+import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.view.Menu;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.Window;
 import android.view.WindowManager;
 import android.widget.Button;
 import android.widget.GridView;
+import android.widget.Toast;
 
+import static riobener.englishtenses.StringArrays.practiceItems;
+import static riobener.englishtenses.StringArrays.readItems;
 import static riobener.englishtenses.StringArrays.tenseList;
 
 
@@ -19,7 +28,6 @@ public class StartActivity extends AppCompatActivity {
     Intent practiceIntent;
 
 
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -27,20 +35,48 @@ public class StartActivity extends AppCompatActivity {
         getWindow().addFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN);
         setContentView(R.layout.activity_start);
         setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);
-        practiceIntent = new Intent(this,PracticeActivity.class);
+        practiceIntent = new Intent(this, PracticeActivity.class);
         gridview = (GridView) findViewById(R.id.gridview);
-        gridview.setAdapter(new ButtonAdapter(this,tenseList));
-        practiceButton = (Button)findViewById(R.id.practice);
+        gridview.setAdapter(new ButtonAdapter(this, tenseList));
+        practiceButton = (Button) findViewById(R.id.practice);
         practiceButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                startActivity(practiceIntent);
-
+              showPracticeOptions();
             }
         });
-
-
-
-
     }
-}
+
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        getMenuInflater().inflate(R.menu.action_menu, menu);
+        return true;
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+       if(item.getItemId()==R.id.statistic){
+           Toast.makeText(StartActivity.this,"Когда-нибудь доделаю...",Toast.LENGTH_LONG).show();
+       }
+                return super.onOptionsItemSelected(item);
+        }
+       void showPracticeOptions(){
+           AlertDialog.Builder alert = new AlertDialog.Builder(this);
+           alert.setTitle("Выберите режим:");
+           alert.setItems(practiceItems, new DialogInterface.OnClickListener() {
+               @Override
+               public void onClick(DialogInterface dialogInterface, int i) {
+                    if(i==0){
+                        practiceIntent.putExtra("mode",0);
+                        startActivity(practiceIntent);
+                    }else if(i==1){
+                        practiceIntent.putExtra("mode",1);
+                        startActivity(practiceIntent);
+                    }
+               }
+           });
+           AlertDialog dialog = alert.create();
+           dialog.show();
+        }
+    }
+

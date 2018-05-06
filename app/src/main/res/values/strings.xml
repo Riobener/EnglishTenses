@@ -1,9 +1,7 @@
 <resources>
     <string name="app_name">English Tenses</string>
     <string name="title_activity_info">InfoActivity</string>
-    <string name="past_simple">
 
-    </string>
     <string name="Present_Simple">
        "<b>Present Simple</b>- время в английском языке.
         Главным составляющим этого времени заключается в периодичности,те когда люди рассказывают о своих регулярных действиях,привычках."

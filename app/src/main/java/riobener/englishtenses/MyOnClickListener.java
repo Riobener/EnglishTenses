@@ -1,7 +1,9 @@
 package riobener.englishtenses;
 
 
+import android.app.AlertDialog;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.util.Log;
 import android.view.MenuItem;
@@ -10,15 +12,15 @@ import android.widget.Toast;
 
 import ru.whalemare.sheetmenu.SheetMenu;
 
+import static riobener.englishtenses.StringArrays.readItems;
+
+
 
 class MyOnClickListener implements View.OnClickListener
 {
 
-    //CHOSENTIME:
-    //1 - Past Simple 2 - Present Simple 3 - Future Simple 4 - Past Continuous 5 - Present Continuous 6 - Future Continuous
-    //7 - Past Perfect 8 - Present Perfect 9 - Future Perfect
-    // 10 - Past Perfect Continuous 11 - Present Perfect Continuous 12 - Future Perfect Continuous
-    public static int CHOSEN_TIME = 0;
+
+
 
     private final int position;
     private Context context;
@@ -35,30 +37,27 @@ class MyOnClickListener implements View.OnClickListener
 
     public void onClick(View v)
     {
-        ShowMenu();
+        showDialog();
 
     }
+    private void showDialog(){
+        AlertDialog.Builder builder = new AlertDialog.Builder(context);
+        builder.setTitle("Читать:");
+        builder.setItems(readItems, new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialogInterface, int i) {
+                if(i==0){
+                    theoryIntent.putExtra("title",tensList[position]);
+                    context.startActivity(theoryIntent);
+                }else{
+                    Toast.makeText(context,"Пока в разработке...",Toast.LENGTH_LONG).show();
+                }
+            }
+        });
+        AlertDialog dialog = builder.create();
+        dialog.show();
+    }
 
-    private void ShowMenu() {
-        SheetMenu.with(context)
-                .setTitle("Что вы хотите выбрать?")
-                .setMenu(R.menu.grid_menu)
-                .setAutoCancel(false)
-                .setClick(new MenuItem.OnMenuItemClickListener() {
-                    @Override
-                    public boolean onMenuItemClick(MenuItem menuItem) {
 
 
-
-                         if(menuItem.getItemId()==R.id.theory){
-
-                            theoryIntent.putExtra("title",tensList[position]);
-                            context.startActivity(theoryIntent);
-
-
-                        }
-                        return false;
-                    }
-                }).show();
-}
     }

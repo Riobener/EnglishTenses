@@ -1,8 +1,0 @@
-<?xml version="1.0" encoding="utf-8"?>
-<menu xmlns:android="http://schemas.android.com/apk/res/android">
-<item android:id="@+id/theory"
-    android:title="Теория"></item>
-
-    <item android:id="@+id/advices"
-        android:title="Советы (В процессе разроботки...)"></item>
-    </menu>
