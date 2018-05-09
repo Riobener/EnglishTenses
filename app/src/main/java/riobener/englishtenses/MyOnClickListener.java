@@ -38,7 +38,6 @@ class MyOnClickListener implements View.OnClickListener
     public void onClick(View v)
     {
         showDialog();
-
     }
     private void showDialog(){
         AlertDialog.Builder builder = new AlertDialog.Builder(context);

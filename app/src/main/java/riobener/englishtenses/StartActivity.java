@@ -20,13 +20,15 @@ import android.widget.Toast;
 import static riobener.englishtenses.StringArrays.practiceItems;
 import static riobener.englishtenses.StringArrays.readItems;
 import static riobener.englishtenses.StringArrays.tenseList;
+import static riobener.englishtenses.StringArrays.timeItems;
 
 
 public class StartActivity extends AppCompatActivity {
     GridView gridview;
     Button practiceButton;
     Intent practiceIntent;
-
+    Bundle extras;
+    int chosenItem;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -35,6 +37,7 @@ public class StartActivity extends AppCompatActivity {
         getWindow().addFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN);
         setContentView(R.layout.activity_start);
         setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);
+        extras = new Bundle();
         practiceIntent = new Intent(this, PracticeActivity.class);
         gridview = (GridView) findViewById(R.id.gridview);
         gridview.setAdapter(new ButtonAdapter(this, tenseList));
@@ -63,20 +66,94 @@ public class StartActivity extends AppCompatActivity {
        void showPracticeOptions(){
            AlertDialog.Builder alert = new AlertDialog.Builder(this);
            alert.setTitle("Выберите режим:");
-           alert.setItems(practiceItems, new DialogInterface.OnClickListener() {
+
+           alert.setSingleChoiceItems(practiceItems,-1, new DialogInterface.OnClickListener() {
                @Override
                public void onClick(DialogInterface dialogInterface, int i) {
-                    if(i==0){
-                        practiceIntent.putExtra("mode",0);
-                        startActivity(practiceIntent);
-                    }else if(i==1){
-                        practiceIntent.putExtra("mode",1);
-                        startActivity(practiceIntent);
-                    }
+                    chosenItem = i;
+               }
+           });
+           alert.setPositiveButton("Ок", new DialogInterface.OnClickListener() {
+               @Override
+               public void onClick(DialogInterface dialogInterface, int i) {
+                   if(chosenItem==0){
+                       chosenItem = -1;
+                       extras.putInt("mode",0);
+                       practiceIntent.putExtras(extras);
+                       startActivity(practiceIntent);
+
+                   }else if(chosenItem==1){
+                       chosenItem = -1;
+                       showTimeModeOptions();
+                   }
+               }
+           });
+           alert.setNegativeButton("Отмена", new DialogInterface.OnClickListener() {
+               @Override
+               public void onClick(DialogInterface dialogInterface, int i) {
+                   dialogInterface.cancel();
                }
            });
            AlertDialog dialog = alert.create();
            dialog.show();
+        }
+        void showTimeModeOptions(){
+            AlertDialog.Builder timeAlert = new AlertDialog.Builder(this);
+            timeAlert.setTitle("Выберите время:");
+
+            timeAlert.setNegativeButton("Отмена", new DialogInterface.OnClickListener() {
+                @Override
+                public void onClick(DialogInterface dialogInterface, int i) {
+                    chosenItem = -1;
+                    dialogInterface.cancel();
+                }
+            });
+            timeAlert.setSingleChoiceItems(timeItems,-1, new DialogInterface.OnClickListener() {
+                @Override
+                public void onClick(DialogInterface dialogInterface, int i) {
+                    chosenItem = i;
+                }
+            });
+            timeAlert.setPositiveButton("Ок", new DialogInterface.OnClickListener() {
+                @Override
+                public void onClick(DialogInterface dialogInterface, int i) {
+                    switch(chosenItem){
+                        case 0:
+                            chosenItem = -1;
+                            extras.putInt("mode",1);
+                            extras.putInt("time",30000);
+                            practiceIntent.putExtras(extras);
+                            startActivity(practiceIntent);
+
+                            break;
+                        case 1:
+                            chosenItem = -1;
+                            extras.putInt("mode",1);
+                            extras.putInt("time",60000);
+                            practiceIntent.putExtras(extras);
+                            startActivity(practiceIntent);
+
+                            break;
+                        case 2:
+                            chosenItem = -1;
+                            extras.putInt("mode",1);
+                            extras.putInt("time",120000);
+                            practiceIntent.putExtras(extras);
+                            startActivity(practiceIntent);
+
+                            break;
+                    }
+                }
+            });
+            timeAlert.setNegativeButton("Отмена", new DialogInterface.OnClickListener() {
+                @Override
+                public void onClick(DialogInterface dialogInterface, int i) {
+                    chosenItem = -1;
+                    dialogInterface.cancel();
+                }
+            });
+            AlertDialog dialog = timeAlert.create();
+            dialog.show();
         }
     }
 

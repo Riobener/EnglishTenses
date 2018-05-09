@@ -1,18 +1,23 @@
 package riobener.englishtenses;
 
+import android.app.Dialog;
+import android.content.Context;
 import android.content.Intent;
 import android.content.pm.ActivityInfo;
 import android.graphics.Color;
+import android.graphics.drawable.ColorDrawable;
 import android.os.CountDownTimer;
 import android.support.annotation.IdRes;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.Log;
+import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.View;
 import android.view.Window;
 import android.view.WindowManager;
 import android.widget.Button;
+import android.widget.LinearLayout;
 import android.widget.RadioButton;
 import android.widget.RadioGroup;
 import android.widget.TextSwitcher;
@@ -21,6 +26,9 @@ import android.widget.Toast;
 import android.widget.ViewSwitcher;
 import java.util.ArrayList;
 import java.util.Locale;
+import java.util.Timer;
+import java.util.TimerTask;
+import java.util.zip.Inflater;
 
 
 import static riobener.englishtenses.StringArrays.ANSWERS;
@@ -28,17 +36,18 @@ import static riobener.englishtenses.StringArrays.SENTENCES;
 import static riobener.englishtenses.StringArrays.tenseList;
 
 public class PracticeActivity extends AppCompatActivity {
-    private long timeInMillis = 120000;
-    private boolean enableTimer;
+    private long timeInMillis = 0;
     private CountDownTimer mCountDownTimer;
     RadioGroup radioGroup;
     RadioButton[] radButton;
     Button chext;
+    Bundle bundle;
     TextView timerText;
     TextView statusMes;
     TextSwitcher switcher;
     Intent intent;
     int mode;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -49,9 +58,10 @@ public class PracticeActivity extends AppCompatActivity {
 
 
         intent = this.getIntent();
+        bundle = intent.getExtras();
         //normal mode = 0, time mode = 1, survival mode = 2
-        mode = intent.getIntExtra("mode",0);
-
+        mode = bundle.getInt("mode");
+        timeInMillis = bundle.getInt("time");
         timerText = (TextView)findViewById(R.id.timer);
 
         switcher = (TextSwitcher)findViewById(R.id.switcher);
@@ -72,16 +82,16 @@ public class PracticeActivity extends AppCompatActivity {
         for(int i =0; i<radButton.length;i++){
             radButton[i] = new RadioButton(this);
             radButton[i].setId(i+10);
-            radButton[i].setTextSize(20);
+            radButton[i].setTextSize(25);
             radioGroup.addView(radButton[i]);
         }
 
         chext = (Button)findViewById(R.id.mainButton);
 
         if(mode == 1){
-            enableTimer = true;
-            startPractice(enableTimer);
 
+            startPractice();
+            startReadyDialogTimer();
             chext.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
@@ -93,16 +103,14 @@ public class PracticeActivity extends AppCompatActivity {
                             chext.setText("Следующее");
                         }else if(chext.getText().equals("Следующее")){
                             hideStatus();
-                            startPractice(enableTimer );
+                            startPractice();
                             chext.setText("Проверить");
                         }
                     }
                 }
             });
         }else{
-            enableTimer = false;
-            startPractice(enableTimer);
-
+            startPractice();
             chext.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
@@ -114,7 +122,7 @@ public class PracticeActivity extends AppCompatActivity {
                             chext.setText("Следующее");
                         }else if(chext.getText().equals("Следующее")){
                             hideStatus();
-                            startPractice(enableTimer );
+                            startPractice();
                             chext.setText("Проверить");
                         }
                     }
@@ -182,18 +190,11 @@ public class PracticeActivity extends AppCompatActivity {
         return pos;
     }
 
-private void startPractice(boolean timerOn){
-    if(timerOn){
-        startTimer();
+private void startPractice(){
         setNewText();
         setupRadio();
-    }else{
-        timerText.setVisibility(View.INVISIBLE);
-        setNewText();
-        setupRadio();
-    }
-
 }
+
 private void showStatus(){
     statusMes = (TextView)findViewById(R.id.status);
     if(radButton[position].getText().equals(ANSWERS[currentSent])){
@@ -244,6 +245,20 @@ private boolean radioIsChecked(){
         String timeFormat = String.format(Locale.getDefault(),"%02d:%02d",min,sec);
         timerText.setText(timeFormat);
 
+    }
+    void startReadyDialogTimer(){
+        Dialog alertDialog = new Dialog(this);
+        alertDialog.setCancelable(false);
+        alertDialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
+        alertDialog.setContentView(R.layout.activity_practice);
+        alertDialog.getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
+        alertDialog.show();
+
+       
+
+
+
+        startTimer();
     }
 
 }
