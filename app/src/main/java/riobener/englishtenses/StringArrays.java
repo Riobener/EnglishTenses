@@ -21,7 +21,7 @@ public class StringArrays {
             "She does not know how to play basketball","Natalie saw a new game in the school",
             "The teacher gave a new chance to the student","When Rosa came home Dylan was cooking a pancakes",
             "While Sarah was reading books, her fish was eating feed","We have watched a tv show",
-            "He often looks at the phone","Did you play basketball?","She was looking at the laptop",
+            "He often looks at the phone.","Did you play basketball?","She was looking at the laptop",
             "He was teaching the student a new program","Water was leaking in my baggage","We have bought a computer",
             "Kate is writing a letter","Sara is cooking a new pie","He teaches a new program","Kate reads a lot of books",
             "She does not love a cup of tea"
@@ -34,7 +34,7 @@ public class StringArrays {
             "Past Continuous","Past Simple","Present Perfect Continuous","Present Perfect Continuous","Present Perfect",
             "Present Continuous","Present Simple","Present Simple","Present Simple","Past Simple","Past Simple",
             "Past Continuous","Past Continuous","Present Perfect","Present Simple","Past Simple","Past Continuous",
-            "Past Continuous","Past Continuous","Present Perfect","Present Continuous","Present continuous","Present Simple",
+            "Past Continuous","Past Continuous","Present Perfect","Present Continuous","Present Continuous","Present Simple",
             "Present Simple","Present Simple"
 
 

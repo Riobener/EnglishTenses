@@ -18,7 +18,6 @@ import android.widget.GridView;
 import android.widget.Toast;
 
 import static riobener.englishtenses.StringArrays.practiceItems;
-import static riobener.englishtenses.StringArrays.readItems;
 import static riobener.englishtenses.StringArrays.tenseList;
 import static riobener.englishtenses.StringArrays.timeItems;
 
@@ -28,7 +27,7 @@ public class StartActivity extends AppCompatActivity {
     Button practiceButton;
     Intent practiceIntent;
     Bundle extras;
-    int chosenItem;
+    int chosenItem = -1;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -66,7 +65,7 @@ public class StartActivity extends AppCompatActivity {
        void showPracticeOptions(){
            AlertDialog.Builder alert = new AlertDialog.Builder(this);
            alert.setTitle("Выберите режим:");
-
+           alert.setCancelable(false);
            alert.setSingleChoiceItems(practiceItems,-1, new DialogInterface.OnClickListener() {
                @Override
                public void onClick(DialogInterface dialogInterface, int i) {
@@ -85,12 +84,18 @@ public class StartActivity extends AppCompatActivity {
                    }else if(chosenItem==1){
                        chosenItem = -1;
                        showTimeModeOptions();
+                   }else if(chosenItem==-1){
+                       chosenItem =-1;
+                       showPracticeOptions();
+                       Toast.makeText(getApplicationContext(),"Выберите режим практики!",Toast.LENGTH_SHORT).show();
+
                    }
                }
            });
            alert.setNegativeButton("Отмена", new DialogInterface.OnClickListener() {
                @Override
                public void onClick(DialogInterface dialogInterface, int i) {
+                   chosenItem = -1;
                    dialogInterface.cancel();
                }
            });
@@ -98,8 +103,9 @@ public class StartActivity extends AppCompatActivity {
            dialog.show();
         }
         void showTimeModeOptions(){
-            AlertDialog.Builder timeAlert = new AlertDialog.Builder(this);
+            final AlertDialog.Builder timeAlert = new AlertDialog.Builder(this);
             timeAlert.setTitle("Выберите время:");
+            timeAlert.setCancelable(false);
 
             timeAlert.setNegativeButton("Отмена", new DialogInterface.OnClickListener() {
                 @Override
@@ -118,6 +124,11 @@ public class StartActivity extends AppCompatActivity {
                 @Override
                 public void onClick(DialogInterface dialogInterface, int i) {
                     switch(chosenItem){
+                        case -1:
+                            chosenItem = -1;
+                            showTimeModeOptions();
+                            Toast.makeText(getApplicationContext(),"Выберите время!",Toast.LENGTH_SHORT).show();
+                            break;
                         case 0:
                             chosenItem = -1;
                             extras.putInt("mode",1);

@@ -1,34 +1,32 @@
 package riobener.englishtenses;
 
+
 import android.app.Dialog;
-import android.content.Context;
 import android.content.Intent;
 import android.content.pm.ActivityInfo;
 import android.graphics.Color;
 import android.graphics.drawable.ColorDrawable;
 import android.os.CountDownTimer;
 import android.support.annotation.IdRes;
+import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
-import android.util.Log;
-import android.view.LayoutInflater;
-import android.view.Menu;
 import android.view.View;
 import android.view.Window;
 import android.view.WindowManager;
 import android.widget.Button;
-import android.widget.LinearLayout;
 import android.widget.RadioButton;
 import android.widget.RadioGroup;
 import android.widget.TextSwitcher;
 import android.widget.TextView;
 import android.widget.Toast;
 import android.widget.ViewSwitcher;
+
+import org.w3c.dom.Text;
+
 import java.util.ArrayList;
 import java.util.Locale;
-import java.util.Timer;
-import java.util.TimerTask;
-import java.util.zip.Inflater;
+
 
 
 import static riobener.englishtenses.StringArrays.ANSWERS;
@@ -36,6 +34,8 @@ import static riobener.englishtenses.StringArrays.SENTENCES;
 import static riobener.englishtenses.StringArrays.tenseList;
 
 public class PracticeActivity extends AppCompatActivity {
+    public int correct = 0;
+    public int mistakes = 0;
     private long timeInMillis = 0;
     private CountDownTimer mCountDownTimer;
     RadioGroup radioGroup;
@@ -71,7 +71,7 @@ public class PracticeActivity extends AppCompatActivity {
                 TextView textView = new TextView(getApplicationContext());
                 textView.setTextSize(25);
                 textView.setTextColor(Color.BLACK);
-                textView.setPadding(10,0,10,0);
+
 
                 return textView;
             }
@@ -89,26 +89,24 @@ public class PracticeActivity extends AppCompatActivity {
         chext = (Button)findViewById(R.id.mainButton);
 
         if(mode == 1){
-
-            startPractice();
             startReadyDialogTimer();
+            startPractice();
+
+            chext.setText("Далее");
             chext.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
-                    if(!radioIsChecked()){
-                        Toast.makeText(getApplicationContext(),"Пожалуйста,выберите ответ!",Toast.LENGTH_LONG).show();
-                    }else if(radioIsChecked()){
-                        if(chext.getText().equals("Проверить")){
-                            showStatus();
-                            chext.setText("Следующее");
-                        }else if(chext.getText().equals("Следующее")){
-                            hideStatus();
-                            startPractice();
-                            chext.setText("Проверить");
-                        }
+                    if (!radioIsChecked()) {
+                        Toast.makeText(getApplicationContext(), "Пожалуйста,выберите ответ!", Toast.LENGTH_LONG).show();
+                    } else if (radioIsChecked()) {
+                        counterCorrectOrMistakes();
+                        startPractice();
                     }
+
+
                 }
             });
+
         }else{
             startPractice();
             chext.setOnClickListener(new View.OnClickListener() {
@@ -194,7 +192,13 @@ private void startPractice(){
         setNewText();
         setupRadio();
 }
-
+    private void counterCorrectOrMistakes(){
+        if(radButton[position].getText().equals(ANSWERS[currentSent])){
+            correct++;
+        }else{
+            mistakes++;
+        }
+    }
 private void showStatus(){
     statusMes = (TextView)findViewById(R.id.status);
     if(radButton[position].getText().equals(ANSWERS[currentSent])){
@@ -216,7 +220,6 @@ private boolean radioIsChecked(){
     }else {
         return true;
     }
-
 }
     //the most useful method in this code
     public static int getRandom(float first,float last){
@@ -233,9 +236,12 @@ private boolean radioIsChecked(){
 
             @Override
             public void onFinish() {
-
+                timerText.setText("00:00");
+                showResultDialog();
+                mCountDownTimer.cancel();
             }
         }.start();
+
 
     }
     void updateTextCount(){
@@ -247,18 +253,76 @@ private boolean radioIsChecked(){
 
     }
     void startReadyDialogTimer(){
-        Dialog alertDialog = new Dialog(this);
+        final Dialog alertDialog = new Dialog(this);
         alertDialog.setCancelable(false);
         alertDialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
-        alertDialog.setContentView(R.layout.activity_practice);
+        alertDialog.setContentView(R.layout.dialog_ready);
         alertDialog.getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
         alertDialog.show();
 
-       
+        final TextView txt = (TextView)alertDialog.findViewById(R.id.readyTimer);
 
+        Thread t = new Thread() {
+            @Override
+            public void run() {
+                txt.setText("3");
+                try {
+                    while (!isInterrupted()) {
+                        Thread.sleep(1000);
+                        runOnUiThread(new Runnable() {
+                            @Override
+                            public void run() {
+                                 if(txt.getText()=="3"){
+                                    txt.setText("2");
+                                }else if(txt.getText()=="2"){
+                                    txt.setText("1");
+                                }else if(txt.getText()=="1"){
+                                    alertDialog.cancel();
+                                    startTimer();
+                                    interrupt();
+                                }
+                            }
+                        });
+                    }
+                } catch (InterruptedException e) {
+                }
+            }
+        };
+        t.start();
+    }
+    void showResultDialog(){
 
+        AlertDialog.Builder builder = new AlertDialog.Builder(PracticeActivity.this);
+        View mView = getLayoutInflater().inflate(R.layout.dialog_result,null);
+        builder.setCancelable(false);
+        builder.setView(mView);
+        final AlertDialog dialog = builder.create();
+        dialog.show();
+        Button menuButton = (Button)mView.findViewById(R.id.mainMenu);
+        Button repeatButton = (Button)mView.findViewById(R.id.repeatButton);
+        TextView corText = (TextView)mView.findViewById(R.id.correct);
+        TextView misText = (TextView)mView.findViewById(R.id.mistakes);
+        corText.setText(corText.getText()+" "+correct);
+        misText.setText(misText.getText()+" "+mistakes);
+        menuButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                startActivity(new Intent(PracticeActivity.this,StartActivity.class));
+                dialog.cancel();
+                finish();
+            }
+        });
+        repeatButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Intent restartIntent = getIntent();
+                dialog.cancel();
+                finish();
 
-        startTimer();
+                startActivity(restartIntent);
+            }
+        });
+
     }
 
 }
