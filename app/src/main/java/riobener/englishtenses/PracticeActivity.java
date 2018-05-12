@@ -236,9 +236,10 @@ private boolean radioIsChecked(){
 
             @Override
             public void onFinish() {
+                mCountDownTimer.cancel();
                 timerText.setText("00:00");
                 showResultDialog();
-                mCountDownTimer.cancel();
+
             }
         }.start();
 
@@ -323,6 +324,11 @@ private boolean radioIsChecked(){
             }
         });
 
-    }
 
+    }
+    @Override
+    public void onBackPressed() {
+        mCountDownTimer.cancel();
+        finish();
+    }
 }

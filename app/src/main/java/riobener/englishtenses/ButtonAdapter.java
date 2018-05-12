@@ -38,17 +38,13 @@ public class ButtonAdapter extends BaseAdapter {
         return list.length;
     }
 
-
     public Object getItem(int position) {
         return null;
     }
 
-
     public long getItemId(int position) {
         return position;
     }
-
-
 
     public View getView(int position,
                         View convertView, ViewGroup parent) {
@@ -59,24 +55,19 @@ public class ButtonAdapter extends BaseAdapter {
 
         Button btn;
         if (convertView == null) {
-
             btn = new Button(mContext);
-
             btn.setLayoutParams(new GridView.LayoutParams(width/3-28, 250));
             btn.setPadding(20, 20, 20, 20);
         }
         else {
             btn = (Button) convertView;
         }
-
         btn.setText(list[position]);
         btn.setTextColor(Color.BLACK);
         btn.setAllCaps(false);
         btn.setTextSize(15);
         btn.setId(position);
         btn.setBackgroundResource(R.drawable.button_style);
-
-        
         btn.setOnClickListener(new MyOnClickListener(position,mContext,list));
         return btn;
     }
