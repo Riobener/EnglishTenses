@@ -22,15 +22,16 @@ import android.widget.TextView;
 import android.widget.Toast;
 import android.widget.ViewSwitcher;
 
-import org.w3c.dom.Text;
 
+import java.io.BufferedReader;
+import java.io.IOException;
+import java.io.InputStreamReader;
 import java.util.ArrayList;
 import java.util.Locale;
 
 
 
-import static riobener.englishtenses.StringArrays.ANSWERS;
-import static riobener.englishtenses.StringArrays.SENTENCES;
+
 import static riobener.englishtenses.StringArrays.tenseList;
 
 public class PracticeActivity extends AppCompatActivity {
@@ -71,8 +72,6 @@ public class PracticeActivity extends AppCompatActivity {
                 TextView textView = new TextView(getApplicationContext());
                 textView.setTextSize(25);
                 textView.setTextColor(Color.BLACK);
-
-
                 return textView;
             }
         });
@@ -91,7 +90,6 @@ public class PracticeActivity extends AppCompatActivity {
         if(mode == 1){
             startReadyDialogTimer();
             startPractice();
-
             chext.setText("Далее");
             chext.setOnClickListener(new View.OnClickListener() {
                 @Override
@@ -102,8 +100,6 @@ public class PracticeActivity extends AppCompatActivity {
                         counterCorrectOrMistakes();
                         startPractice();
                     }
-
-
                 }
             });
 
@@ -127,24 +123,22 @@ public class PracticeActivity extends AppCompatActivity {
                 }
             });
         }
-
     }
-
     private int position;
     void setupRadio(){
-        int checkReiteration;
+        int reiteration;
         int radRep;
         ArrayList<String> helpar = new ArrayList<>();
 
-            checkReiteration = getRandom(0,radButton.length);
+            reiteration = getRandom(0,radButton.length);
         int chosenPos = findCorrectAnswer();
-        radButton[checkReiteration].setText(tenseList[chosenPos]);
+        radButton[reiteration].setText(tenseList[chosenPos]);
         for(int i = 0; i<tenseList.length;i++){
             helpar.add(tenseList[i]);
         }
         helpar.remove(chosenPos);
         for(int i = 0; i<radButton.length;i++){
-            if(i!=checkReiteration){
+            if(i!=reiteration){
                 radRep = getRandom(0, helpar.size());
                 radButton[i].setText(helpar.get(radRep));
                 helpar.remove(radRep);
@@ -156,31 +150,108 @@ public class PracticeActivity extends AppCompatActivity {
             public void onCheckedChanged(RadioGroup radioGroup, @IdRes int i) {
                 switch(i){
                     case 10:
+                        Toast.makeText(getApplicationContext(),"checked",Toast.LENGTH_SHORT).show();
                         position = 0;
                         break;
                     case 11:
+                        Toast.makeText(getApplicationContext(),"checked",Toast.LENGTH_SHORT).show();
                         position = 1;
                         break;
                     case 12:
+                        Toast.makeText(getApplicationContext(),"checked",Toast.LENGTH_SHORT).show();
                         position = 2;
                         break;
                     case 13:
+                        Toast.makeText(getApplicationContext(),"checked",Toast.LENGTH_SHORT).show();
                         position = 3;
                         break;
                 }
             }
         });
     }
+//chosenTense has a value that numbers the txt. file in /assets folder. Calculation takes place in alphabetical order.
+    private int chosenTense = 0;
 
-    private int currentSent;
+    private String correctAnswer;
     void setNewText(){
-        currentSent = getRandom(0,SENTENCES.length);
-        switcher.setText(SENTENCES[currentSent]);
+        InputStreamReader inputStream = null;
+        try {
+            chosenTense = getRandom(1,12);
+            switch(chosenTense){
+                case 1:
+                    inputStream = new InputStreamReader(getAssets().open("Future Continuous.txt"));
+                    correctAnswer = "Future Continuous";
+                    break;
+                case 2:
+                    inputStream = new InputStreamReader(getAssets().open("Future Perfect Continuous.txt"));
+                    correctAnswer = "Future Perfect Continuous";
+                    break;
+                case 3:
+                    inputStream = new InputStreamReader(getAssets().open("Future Perfect.txt"));
+                    correctAnswer = "Future Perfect";
+                    break;
+                case 4:
+                    inputStream = new InputStreamReader(getAssets().open("Future Simple.txt"));
+                    correctAnswer = "Future Simple";
+                    break;
+                case 5:
+                    inputStream = new InputStreamReader(getAssets().open("Past Continuous.txt"));
+                    correctAnswer = "Past Continuous";
+                    break;
+                case 6:
+                    inputStream = new InputStreamReader(getAssets().open("Past Perfect Continuous.txt"));
+                    correctAnswer = "Past Perfect Continuous";
+                    break;
+                case 7:
+                    inputStream = new InputStreamReader(getAssets().open("Past Perfect.txt"));
+                    correctAnswer = "Past Perfect";
+                    break;
+                case 8:
+                    inputStream = new InputStreamReader(getAssets().open("Past Simple.txt"));
+                    correctAnswer = "Past Simple";
+                    break;
+                case 9:
+                    inputStream = new InputStreamReader(getAssets().open("Present Continuous.txt"));
+                    correctAnswer = "Present Continuous";
+                    break;
+                case 10:
+                    inputStream = new InputStreamReader(getAssets().open("Present Perfect Continuous.txt"));
+                    correctAnswer = "Present Perfect Continuous";
+                    break;
+                case 11:
+                    inputStream = new InputStreamReader(getAssets().open("Present Perfect.txt"));
+                    correctAnswer = "Present Perfect";
+                    break;
+                case 12:
+                    inputStream = new InputStreamReader(getAssets().open("Present Simple.txt"));
+                    correctAnswer = "Present Simple";
+                    break;
+            }
+
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+
+        BufferedReader br = new BufferedReader(inputStream);
+        int desiredLine = getRandom(0,4);
+        String mainLine="";
+        int counterLine = 0;
+        try {
+            while ((mainLine = br.readLine()) != null)   {
+                if (counterLine == desiredLine) {
+                    break;
+                }
+                counterLine++;
+            }
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        switcher.setText(mainLine);
     }
-    private int findCorrectAnswer(){
+   private int findCorrectAnswer(){
         int pos = 0;
         for(int i = 0; i<tenseList.length;i++){
-            if(tenseList[i].equals(ANSWERS[currentSent])){
+            if(tenseList[i].equals(correctAnswer)){
                 pos = i;
                 break;
             }
@@ -193,7 +264,7 @@ private void startPractice(){
         setupRadio();
 }
     private void counterCorrectOrMistakes(){
-        if(radButton[position].getText().equals(ANSWERS[currentSent])){
+        if(radButton[position].getText().equals(correctAnswer)){
             correct++;
         }else{
             mistakes++;
@@ -201,13 +272,13 @@ private void startPractice(){
     }
 private void showStatus(){
     statusMes = (TextView)findViewById(R.id.status);
-    if(radButton[position].getText().equals(ANSWERS[currentSent])){
+    if(radButton[position].getText().equals(correctAnswer)){
         statusMes.setTextColor(Color.GREEN);
         statusMes.setText("Правильно!");
 
     }else{
         statusMes.setTextColor(Color.RED);
-        statusMes.setText("Не правильно! Правильный ответ: "+ANSWERS[currentSent]);
+        statusMes.setText("Не правильно! Правильный ответ: "+correctAnswer);
     }
 
 }
@@ -239,7 +310,6 @@ private boolean radioIsChecked(){
                 mCountDownTimer.cancel();
                 timerText.setText("00:00");
                 showResultDialog();
-
             }
         }.start();
 
@@ -319,7 +389,6 @@ private boolean radioIsChecked(){
                 Intent restartIntent = getIntent();
                 dialog.cancel();
                 finish();
-
                 startActivity(restartIntent);
             }
         });
@@ -328,7 +397,12 @@ private boolean radioIsChecked(){
     }
     @Override
     public void onBackPressed() {
-        mCountDownTimer.cancel();
-        finish();
+        if(mode==1){
+            mCountDownTimer.cancel();
+            finish();
+        }else{
+            finish();
+        }
+
     }
 }
