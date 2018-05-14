@@ -8,15 +8,19 @@ import android.graphics.Color;
 import android.graphics.drawable.ColorDrawable;
 import android.os.CountDownTimer;
 import android.support.annotation.IdRes;
+import android.support.v7.app.ActionBar;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.View;
+import android.view.ViewGroup;
 import android.view.Window;
 import android.view.WindowManager;
+import android.widget.AbsListView;
 import android.widget.Button;
 import android.widget.RadioButton;
 import android.widget.RadioGroup;
+import android.widget.RelativeLayout;
 import android.widget.TextSwitcher;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -39,13 +43,16 @@ public class PracticeActivity extends AppCompatActivity {
     public int mistakes = 0;
     private long timeInMillis = 0;
     private CountDownTimer mCountDownTimer;
+    boolean checkWithoutButton = false;
+    ViewGroup radioLayout;
+    ViewGroup textLayout;
     RadioGroup radioGroup;
     RadioButton[] radButton;
     Button chext;
     Bundle bundle;
     TextView timerText;
     TextView statusMes;
-    TextSwitcher switcher;
+    TextView mainText;
     Intent intent;
     int mode;
 
@@ -57,53 +64,76 @@ public class PracticeActivity extends AppCompatActivity {
         setContentView(R.layout.activity_practice);
         setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);
 
-
         intent = this.getIntent();
         bundle = intent.getExtras();
         //normal mode = 0, time mode = 1, survival mode = 2
         mode = bundle.getInt("mode");
         timeInMillis = bundle.getInt("time");
-        timerText = (TextView)findViewById(R.id.timer);
 
-        switcher = (TextSwitcher)findViewById(R.id.switcher);
-        switcher.setFactory(new ViewSwitcher.ViewFactory() {
-            @Override
-            public View makeView() {
-                TextView textView = new TextView(getApplicationContext());
-                textView.setTextSize(25);
-                textView.setTextColor(Color.BLACK);
-                return textView;
-            }
-        });
-
+        statusMes = (TextView)findViewById(R.id.status);
         radioGroup = (RadioGroup)findViewById(R.id.varOfAnswers);
-        radButton = new RadioButton[4];
-        for(int i =0; i<radButton.length;i++){
-            radButton[i] = new RadioButton(this);
-            radButton[i].setId(i+10);
-            radButton[i].setTextSize(25);
-            radioGroup.addView(radButton[i]);
+        mainText = (TextView)findViewById(R.id.mainText);
+        if(mode==1){
+            RelativeLayout.LayoutParams radioGroupParams = new RelativeLayout.LayoutParams(RadioGroup.LayoutParams.WRAP_CONTENT,
+                    RadioGroup.LayoutParams.WRAP_CONTENT);
+            radioGroupParams.setMargins(0,0,0,100);
+            radioGroup.setLayoutParams(radioGroupParams);
+            RelativeLayout.LayoutParams radioParams = new RelativeLayout.LayoutParams(RadioGroup.LayoutParams.WRAP_CONTENT,
+                    RadioGroup.LayoutParams.WRAP_CONTENT);
+            radioParams.setMargins(0,20,0,20);
+            radButton = new RadioButton[4];
+            for(int i =0; i<radButton.length;i++){
+                radButton[i] = new RadioButton(this);
+                radButton[i].setId(i+10);
+                radButton[i].setTextSize(25);
+                radioGroup.addView(radButton[i],radioParams);
+            }
+
+            }else{
+            radButton = new RadioButton[4];
+            for(int i =0; i<radButton.length;i++){
+                radButton[i] = new RadioButton(this);
+                radButton[i].setId(i+10);
+                radButton[i].setTextSize(25);
+                radioGroup.addView(radButton[i]);
+            }
+
         }
 
-        chext = (Button)findViewById(R.id.mainButton);
-
         if(mode == 1){
+            checkWithoutButton = true;
+            textLayout = (ViewGroup)findViewById(R.id.textRelative);
+            timerText = new TextView(this);
+            timerText.setLayoutParams(new RelativeLayout.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT,
+                    ViewGroup.LayoutParams.WRAP_CONTENT));
+            RelativeLayout.LayoutParams relativeParams = (RelativeLayout.LayoutParams)timerText.getLayoutParams();
+            relativeParams.addRule(RelativeLayout.ALIGN_TOP);
+            relativeParams.addRule(RelativeLayout.CENTER_HORIZONTAL);
+            timerText.setLayoutParams(relativeParams);
+            timerText.setText("00:00");
+            timerText.setTextSize(60);
+            timerText.setTextColor(Color.BLACK);
+            textLayout.addView(timerText);
             startReadyDialogTimer();
             startPractice();
-            chext.setText("Далее");
-            chext.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View view) {
-                    if (!radioIsChecked()) {
-                        Toast.makeText(getApplicationContext(), "Пожалуйста,выберите ответ!", Toast.LENGTH_LONG).show();
-                    } else if (radioIsChecked()) {
-                        counterCorrectOrMistakes();
-                        startPractice();
-                    }
-                }
-            });
 
-        }else{
+
+        }else if(mode == 0){
+            checkWithoutButton = false;
+            radioLayout = (ViewGroup)findViewById(R.id.layoutWithRadio);
+            chext = new Button(this);
+            chext.setLayoutParams(new RelativeLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT,
+                    ViewGroup.LayoutParams.WRAP_CONTENT));
+            RelativeLayout.LayoutParams layoutParams = (RelativeLayout.LayoutParams)chext.getLayoutParams();
+            layoutParams.addRule(RelativeLayout.ALIGN_BOTTOM);
+            layoutParams.addRule(RelativeLayout.BELOW,radioGroup.getId());
+            layoutParams.setMargins(10,10,10,30);
+            chext.setLayoutParams(layoutParams);
+            chext.setBackgroundResource(R.drawable.button_style);
+            chext.setText("Проверить");
+            chext.setAllCaps(false);
+            chext.setTextSize(15);
+            radioLayout.addView(chext);
             startPractice();
             chext.setOnClickListener(new View.OnClickListener() {
                 @Override
@@ -122,6 +152,8 @@ public class PracticeActivity extends AppCompatActivity {
                     }
                 }
             });
+        }else if(mode==2){
+
         }
     }
     private int position;
@@ -130,7 +162,7 @@ public class PracticeActivity extends AppCompatActivity {
         int radRep;
         ArrayList<String> helpar = new ArrayList<>();
 
-            reiteration = getRandom(0,radButton.length);
+        reiteration = getRandom(0,radButton.length);
         int chosenPos = findCorrectAnswer();
         radButton[reiteration].setText(tenseList[chosenPos]);
         for(int i = 0; i<tenseList.length;i++){
@@ -148,27 +180,50 @@ public class PracticeActivity extends AppCompatActivity {
         radioGroup.setOnCheckedChangeListener(new RadioGroup.OnCheckedChangeListener() {
             @Override
             public void onCheckedChanged(RadioGroup radioGroup, @IdRes int i) {
-                switch(i){
-                    case 10:
-                        Toast.makeText(getApplicationContext(),"checked",Toast.LENGTH_SHORT).show();
-                        position = 0;
-                        break;
-                    case 11:
-                        Toast.makeText(getApplicationContext(),"checked",Toast.LENGTH_SHORT).show();
-                        position = 1;
-                        break;
-                    case 12:
-                        Toast.makeText(getApplicationContext(),"checked",Toast.LENGTH_SHORT).show();
-                        position = 2;
-                        break;
-                    case 13:
-                        Toast.makeText(getApplicationContext(),"checked",Toast.LENGTH_SHORT).show();
-                        position = 3;
-                        break;
+                if(checkWithoutButton){
+                    switch(i){
+                        case 10:
+                            counterCorrectOrMistakes();
+                            startPractice();
+                            position = 0;
+                            break;
+                        case 11:
+                            counterCorrectOrMistakes();
+                            startPractice();
+                            position = 1;
+                            break;
+                        case 12:
+                            counterCorrectOrMistakes();
+                            startPractice();
+                            position = 2;
+                            break;
+                        case 13:
+                            counterCorrectOrMistakes();
+                            startPractice();
+                            position = 3;
+                            break;
+                    }
+                }else{
+                    switch(i){
+                        case 10:
+                            position = 0;
+                            break;
+                        case 11:
+                            position = 1;
+                            break;
+                        case 12:
+                            position = 2;
+                            break;
+                        case 13:
+                            position = 3;
+                            break;
+                    }
                 }
+
             }
         });
     }
+
 //chosenTense has a value that numbers the txt. file in /assets folder. Calculation takes place in alphabetical order.
     private int chosenTense = 0;
 
@@ -227,7 +282,6 @@ public class PracticeActivity extends AppCompatActivity {
                     correctAnswer = "Present Simple";
                     break;
             }
-
         } catch (IOException e) {
             e.printStackTrace();
         }
@@ -246,7 +300,7 @@ public class PracticeActivity extends AppCompatActivity {
         } catch (IOException e) {
             e.printStackTrace();
         }
-        switcher.setText(mainLine);
+        mainText.setText(mainLine);
     }
    private int findCorrectAnswer(){
         int pos = 0;
@@ -271,7 +325,7 @@ private void startPractice(){
         }
     }
 private void showStatus(){
-    statusMes = (TextView)findViewById(R.id.status);
+
     if(radButton[position].getText().equals(correctAnswer)){
         statusMes.setTextColor(Color.GREEN);
         statusMes.setText("Правильно!");
@@ -379,6 +433,7 @@ private boolean radioIsChecked(){
             @Override
             public void onClick(View view) {
                 startActivity(new Intent(PracticeActivity.this,StartActivity.class));
+                mCountDownTimer.cancel();
                 dialog.cancel();
                 finish();
             }
@@ -387,13 +442,12 @@ private boolean radioIsChecked(){
             @Override
             public void onClick(View view) {
                 Intent restartIntent = getIntent();
+                mCountDownTimer.cancel();
                 dialog.cancel();
                 finish();
                 startActivity(restartIntent);
             }
         });
-
-
     }
     @Override
     public void onBackPressed() {

@@ -18,10 +18,6 @@ import static riobener.englishtenses.StringArrays.readItems;
 
 class MyOnClickListener implements View.OnClickListener
 {
-
-
-
-
     private final int position;
     private Context context;
     Intent theoryIntent;
@@ -32,7 +28,6 @@ class MyOnClickListener implements View.OnClickListener
         this.position = position;
         this.tensList = tensesList;
         theoryIntent = new Intent(context,InfoActivity.class);
-
     }
 
     public void onClick(View v)
