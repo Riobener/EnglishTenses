@@ -4,7 +4,9 @@ package riobener.englishtenses;
 import android.app.Dialog;
 import android.content.Intent;
 import android.content.pm.ActivityInfo;
+import android.content.res.ColorStateList;
 import android.graphics.Color;
+import android.graphics.PorterDuff;
 import android.graphics.drawable.ColorDrawable;
 import android.os.CountDownTimer;
 import android.support.annotation.IdRes;
@@ -12,12 +14,14 @@ import android.support.v7.app.ActionBar;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.Window;
 import android.view.WindowManager;
 import android.widget.AbsListView;
 import android.widget.Button;
+import android.widget.ProgressBar;
 import android.widget.RadioButton;
 import android.widget.RadioGroup;
 import android.widget.RelativeLayout;
@@ -46,6 +50,7 @@ public class PracticeActivity extends AppCompatActivity {
     boolean checkWithoutButton = false;
     ViewGroup radioLayout;
     ViewGroup textLayout;
+    ViewGroup progressLayout;
     RadioGroup radioGroup;
     RadioButton[] radButton;
     Button chext;
@@ -53,7 +58,9 @@ public class PracticeActivity extends AppCompatActivity {
     TextView timerText;
     TextView statusMes;
     TextView mainText;
+    TextView comboText;
     Intent intent;
+    ProgressBar survivalBar;
     int mode;
 
     @Override
@@ -63,7 +70,7 @@ public class PracticeActivity extends AppCompatActivity {
         getWindow().addFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN);
         setContentView(R.layout.activity_practice);
         setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);
-
+        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         intent = this.getIntent();
         bundle = intent.getExtras();
         //normal mode = 0, time mode = 1, survival mode = 2
@@ -73,7 +80,7 @@ public class PracticeActivity extends AppCompatActivity {
         statusMes = (TextView)findViewById(R.id.status);
         radioGroup = (RadioGroup)findViewById(R.id.varOfAnswers);
         mainText = (TextView)findViewById(R.id.mainText);
-        if(mode==1){
+        if(mode==1||mode==2){
             RelativeLayout.LayoutParams radioGroupParams = new RelativeLayout.LayoutParams(RadioGroup.LayoutParams.WRAP_CONTENT,
                     RadioGroup.LayoutParams.WRAP_CONTENT);
             radioGroupParams.setMargins(0,0,0,100);
@@ -101,25 +108,27 @@ public class PracticeActivity extends AppCompatActivity {
         }
 
         if(mode == 1){
+            getSupportActionBar().setTitle("Режим на время");
             checkWithoutButton = true;
-            textLayout = (ViewGroup)findViewById(R.id.textRelative);
+            progressLayout = (ViewGroup)findViewById(R.id.progressLayout);
             timerText = new TextView(this);
             timerText.setLayoutParams(new RelativeLayout.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT,
-                    ViewGroup.LayoutParams.WRAP_CONTENT));
+                    ViewGroup.LayoutParams.MATCH_PARENT));
             RelativeLayout.LayoutParams relativeParams = (RelativeLayout.LayoutParams)timerText.getLayoutParams();
-            relativeParams.addRule(RelativeLayout.ALIGN_TOP);
             relativeParams.addRule(RelativeLayout.CENTER_HORIZONTAL);
             timerText.setLayoutParams(relativeParams);
             timerText.setText("00:00");
-            timerText.setTextSize(60);
+            timerText.setTextSize(50);
             timerText.setTextColor(Color.BLACK);
-            textLayout.addView(timerText);
+            progressLayout.addView(timerText);
             startReadyDialogTimer();
             startPractice();
 
 
         }else if(mode == 0){
+            getSupportActionBar().setTitle("Обычный режим");
             checkWithoutButton = false;
+            progressLayout = (ViewGroup)findViewById(R.id.progressLayout);
             radioLayout = (ViewGroup)findViewById(R.id.layoutWithRadio);
             chext = new Button(this);
             chext.setLayoutParams(new RelativeLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT,
@@ -134,6 +143,17 @@ public class PracticeActivity extends AppCompatActivity {
             chext.setAllCaps(false);
             chext.setTextSize(15);
             radioLayout.addView(chext);
+            comboText = new TextView(this);
+            comboText.setLayoutParams(new RelativeLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT,
+                    ViewGroup.LayoutParams.WRAP_CONTENT));
+            RelativeLayout.LayoutParams comboParams = (RelativeLayout.LayoutParams)comboText.getLayoutParams();
+            comboParams.addRule(RelativeLayout.CENTER_HORIZONTAL);
+            comboText.setLayoutParams(comboParams);
+            comboText.setText("Комбо: "+combo);
+            comboText.setTextSize(40);
+            comboText.setTextColor(Color.DKGRAY);
+            comboText.setTextAlignment(View.TEXT_ALIGNMENT_CENTER);
+            progressLayout.addView(comboText);
             startPractice();
             chext.setOnClickListener(new View.OnClickListener() {
                 @Override
@@ -153,6 +173,29 @@ public class PracticeActivity extends AppCompatActivity {
                 }
             });
         }else if(mode==2){
+            getSupportActionBar().setTitle("Режим выживание");
+            checkWithoutButton = true;
+            progressLayout = (ViewGroup)findViewById(R.id.progressLayout);
+            survivalBar = new ProgressBar(this,null,android.R.attr.progressBarStyleHorizontal);
+
+            survivalBar.setLayoutParams(new RelativeLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT,
+                    ViewGroup.LayoutParams.MATCH_PARENT));
+
+            RelativeLayout.LayoutParams progressParams = (RelativeLayout.LayoutParams)survivalBar.getLayoutParams();
+            progressParams.addRule(RelativeLayout.CENTER_HORIZONTAL);
+            progressParams.setMargins(20,10,20,0);
+            survivalBar.setLayoutParams(progressParams);
+            survivalBar.setProgress(50);
+            survivalBar.setScaleY(7f);
+            survivalBar.getProgressDrawable().setColorFilter(Color.GREEN, android.graphics.PorterDuff.Mode.SRC_IN);
+
+            progressLayout.addView(survivalBar);
+
+            startPractice();
+
+
+
+
 
         }
     }
@@ -329,10 +372,12 @@ private void showStatus(){
     if(radButton[position].getText().equals(correctAnswer)){
         statusMes.setTextColor(Color.GREEN);
         statusMes.setText("Правильно!");
+        addCombo();
 
     }else{
         statusMes.setTextColor(Color.RED);
         statusMes.setText("Не правильно! Правильный ответ: "+correctAnswer);
+        breakCombo();
     }
 
 }
@@ -375,7 +420,15 @@ private boolean radioIsChecked(){
 
         String timeFormat = String.format(Locale.getDefault(),"%02d:%02d",min,sec);
         timerText.setText(timeFormat);
-
+    }
+    public int combo = 0;
+    void addCombo(){
+        combo++;
+        comboText.setText("Комбо: "+combo);
+    }
+    void breakCombo(){
+        combo = 0;
+        comboText.setText("Комбо: "+combo);
     }
     void startReadyDialogTimer(){
         final Dialog alertDialog = new Dialog(this);
@@ -454,9 +507,23 @@ private boolean radioIsChecked(){
         if(mode==1){
             mCountDownTimer.cancel();
             finish();
+            startActivity(new Intent(PracticeActivity.this,StartActivity.class));
+        }else{
+
+            finish();
+            startActivity(new Intent(PracticeActivity.this,StartActivity.class));
+        }
+
+    }
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        if(item.getItemId()==android.R.id.home&&mode==1){
+            mCountDownTimer.cancel();
+            finish();
+
         }else{
             finish();
         }
-
+        return super.onOptionsItemSelected(item);
     }
 }

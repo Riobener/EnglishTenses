@@ -25,7 +25,8 @@
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value="riobener.englishtenses.StartActivity" />
         </activity>
-        <activity android:name=".PracticeActivity"></activity>
+        <activity android:name=".PracticeActivity"
+            android:parentActivityName=".StartActivity"></activity>
     </application>
 
 </manifest>

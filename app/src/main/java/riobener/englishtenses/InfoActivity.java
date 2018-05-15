@@ -1,6 +1,7 @@
 package riobener.englishtenses;
 
 import android.content.Intent;
+import android.content.pm.ActivityInfo;
 import android.content.res.Resources;
 import android.media.Image;
 import android.os.Bundle;
@@ -27,7 +28,7 @@ public class InfoActivity extends AppCompatActivity {
         requestWindowFeature(Window.FEATURE_NO_TITLE);
         getWindow().addFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN);
         setContentView(R.layout.activity_info);
-
+        setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);
         intentFrom = this.getIntent();
         title = intentFrom.getStringExtra("title");
         setTitle("");

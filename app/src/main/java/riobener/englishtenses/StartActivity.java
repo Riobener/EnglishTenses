@@ -49,6 +49,8 @@ public class StartActivity extends AppCompatActivity {
         });
     }
 
+
+
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         getMenuInflater().inflate(R.menu.action_menu, menu);
@@ -84,11 +86,16 @@ public class StartActivity extends AppCompatActivity {
                    }else if(chosenItem==1){
                        chosenItem = -1;
                        showTimeModeOptions();
+
+                   }else if(chosenItem==2){
+                       chosenItem = -1;
+                       extras.putInt("mode",2);
+                       practiceIntent.putExtras(extras);
+                       startActivity(practiceIntent);
                    }else if(chosenItem==-1){
                        chosenItem =-1;
                        showPracticeOptions();
                        Toast.makeText(getApplicationContext(),"Выберите режим практики!",Toast.LENGTH_SHORT).show();
-
                    }
                }
            });
