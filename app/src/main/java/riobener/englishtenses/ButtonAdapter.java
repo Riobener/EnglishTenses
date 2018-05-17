@@ -24,14 +24,9 @@ public class ButtonAdapter extends BaseAdapter {
     private Context mContext;
     final String[]list;
 
-
-
-
     public ButtonAdapter(Context c,String[]tenses) {
-
         this.list = tenses;
         mContext = c;
-
     }
 
     public int getCount() {

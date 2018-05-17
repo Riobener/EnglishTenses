@@ -32,26 +32,7 @@ class MyOnClickListener implements View.OnClickListener
 
     public void onClick(View v)
     {
-        showDialog();
+        theoryIntent.putExtra("title",tensList[position]);
+        context.startActivity(theoryIntent);
     }
-    private void showDialog(){
-        AlertDialog.Builder builder = new AlertDialog.Builder(context);
-        builder.setTitle("Читать:");
-        builder.setItems(readItems, new DialogInterface.OnClickListener() {
-            @Override
-            public void onClick(DialogInterface dialogInterface, int i) {
-                if(i==0){
-                    theoryIntent.putExtra("title",tensList[position]);
-                    context.startActivity(theoryIntent);
-                }else{
-                    Toast.makeText(context,"Пока в разработке...",Toast.LENGTH_LONG).show();
-                }
-            }
-        });
-        AlertDialog dialog = builder.create();
-        dialog.show();
-    }
-
-
-
-    }
+}

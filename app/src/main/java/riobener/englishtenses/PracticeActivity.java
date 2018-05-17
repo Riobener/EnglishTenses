@@ -9,6 +9,7 @@ import android.graphics.Color;
 import android.graphics.PorterDuff;
 import android.graphics.drawable.ColorDrawable;
 import android.os.CountDownTimer;
+import android.os.Handler;
 import android.support.annotation.IdRes;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.AlertDialog;
@@ -34,6 +35,7 @@ import android.widget.ViewSwitcher;
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
+import java.io.InterruptedIOException;
 import java.util.ArrayList;
 import java.util.Locale;
 
@@ -43,18 +45,21 @@ import java.util.Locale;
 import static riobener.englishtenses.StringArrays.tenseList;
 
 public class PracticeActivity extends AppCompatActivity {
+    boolean stopProgress = false;
+    public int progress = 1000;
     public int correct = 0;
     public int mistakes = 0;
     private long timeInMillis = 0;
+    private CountDownTimer progressTimer;
     private CountDownTimer mCountDownTimer;
     boolean checkWithoutButton = false;
     ViewGroup radioLayout;
-    ViewGroup textLayout;
     ViewGroup progressLayout;
     RadioGroup radioGroup;
     RadioButton[] radButton;
     Button chext;
     Bundle bundle;
+    Handler handler;
     TextView timerText;
     TextView statusMes;
     TextView mainText;
@@ -76,6 +81,8 @@ public class PracticeActivity extends AppCompatActivity {
         //normal mode = 0, time mode = 1, survival mode = 2
         mode = bundle.getInt("mode");
         timeInMillis = bundle.getInt("time");
+
+        handler = new Handler();
 
         statusMes = (TextView)findViewById(R.id.status);
         radioGroup = (RadioGroup)findViewById(R.id.varOfAnswers);
@@ -183,19 +190,15 @@ public class PracticeActivity extends AppCompatActivity {
 
             RelativeLayout.LayoutParams progressParams = (RelativeLayout.LayoutParams)survivalBar.getLayoutParams();
             progressParams.addRule(RelativeLayout.CENTER_HORIZONTAL);
-            progressParams.setMargins(20,10,20,0);
+            progressParams.setMargins(50,10,50,0);
             survivalBar.setLayoutParams(progressParams);
             survivalBar.setProgress(50);
             survivalBar.setScaleY(7f);
+            survivalBar.setMax(1000);
             survivalBar.getProgressDrawable().setColorFilter(Color.GREEN, android.graphics.PorterDuff.Mode.SRC_IN);
-
             progressLayout.addView(survivalBar);
-
+            startReadyDialogTimer();
             startPractice();
-
-
-
-
 
         }
     }
@@ -262,7 +265,6 @@ public class PracticeActivity extends AppCompatActivity {
                             break;
                     }
                 }
-
             }
         });
     }
@@ -362,8 +364,16 @@ private void startPractice(){
 }
     private void counterCorrectOrMistakes(){
         if(radButton[position].getText().equals(correctAnswer)){
+            if(mode==2){
+                progress += 80;
+            }
             correct++;
         }else{
+            if(mode==2){
+
+                progress -= 40;
+
+            }
             mistakes++;
         }
     }
@@ -456,7 +466,12 @@ private boolean radioIsChecked(){
                                     txt.setText("1");
                                 }else if(txt.getText()=="1"){
                                     alertDialog.cancel();
-                                    startTimer();
+                                     if(mode==1){
+                                         startTimer();
+                                     }else if(mode==2){
+                                         startProgress();
+                                     }
+
                                     interrupt();
                                 }
                             }
@@ -467,6 +482,8 @@ private boolean radioIsChecked(){
             }
         };
         t.start();
+
+
     }
     void showResultDialog(){
 
@@ -485,20 +502,35 @@ private boolean radioIsChecked(){
         menuButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                startActivity(new Intent(PracticeActivity.this,StartActivity.class));
-                mCountDownTimer.cancel();
-                dialog.cancel();
-                finish();
+                if(mode==1){
+                    startActivity(new Intent(PracticeActivity.this,StartActivity.class));
+                    mCountDownTimer.cancel();
+                    dialog.cancel();
+                    finish();
+                }else{
+                    startActivity(new Intent(PracticeActivity.this,StartActivity.class));
+                    dialog.cancel();
+                    finish();
+                }
+
             }
         });
         repeatButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Intent restartIntent = getIntent();
-                mCountDownTimer.cancel();
-                dialog.cancel();
-                finish();
-                startActivity(restartIntent);
+                if (mode == 1) {
+                    Intent restartIntent = getIntent();
+                    mCountDownTimer.cancel();
+                    dialog.cancel();
+                    finish();
+                    startActivity(restartIntent);
+                }else{
+                    Intent restartIntent = getIntent();
+                    dialog.cancel();
+                    finish();
+                    startActivity(restartIntent);
+                }
+
             }
         });
     }
@@ -526,4 +558,46 @@ private boolean radioIsChecked(){
         }
         return super.onOptionsItemSelected(item);
     }
+
+    private void startProgress(){
+        survivalBar.setProgress(1000);
+        new Thread(new Runnable() {
+            @Override
+            public void run() {
+                while(stopProgress!=true){
+                    if(progress<0){
+                        progress=0;
+                    }else if(progress>1000){
+                        progress=1000;
+                    }
+
+                    progress -=2;
+                    try {
+                        Thread.sleep(80);
+                    } catch (InterruptedException e) {
+                        e.printStackTrace();
+                    }
+                    handler.post(new Runnable() {
+                        @Override
+                        public void run() {
+                            if(progress<=0){
+                                stopProgress=true;
+                            showResultDialog();
+                        }else{
+                                survivalBar.setProgress(progress);
+                            }
+
+
+
+
+                        }
+                    });
+                }
+
+            }
+
+        }).start();
+
+    }
+
 }
