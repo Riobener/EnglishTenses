@@ -20,6 +20,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import static riobener.englishtenses.StringArrays.STAT_ITEMS;
+import static riobener.englishtenses.StringArrays.tenseList;
 
 
 public class  StatisticsActivity extends AppCompatActivity {
@@ -31,6 +32,8 @@ public class  StatisticsActivity extends AppCompatActivity {
         getWindow().addFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN);
         setContentView(R.layout.activity_statistics);
         setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);
+        getSupportActionBar().setTitle("Статистика");
+        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         statList = (ListView)findViewById(R.id.statList);
         listAdapter = new ArrayAdapter<String>(this,R.layout.stat_list_item,STAT_ITEMS);
         statList.setAdapter(listAdapter);
@@ -66,9 +69,13 @@ public class  StatisticsActivity extends AppCompatActivity {
             builder.setCancelable(true);
             builder.setView(mView);
             TextView combo = (TextView)mView.findViewById(R.id.bestCombo);
+            TextView ratio = (TextView)mView.findViewById(R.id.bestRatio);
+            TextView needToWork = (TextView)mView.findViewById(R.id.problemTense);
             SharedPreferences pref = PreferenceManager.getDefaultSharedPreferences(this);
             int topCombo = pref.getInt("NORMAL_COMBO",0);
             combo.setText("Максимальное комбо: "+topCombo);
+            ratio.setText("Лучшее соотношение правильно/неправильно: "+2.5);
+            needToWork.setText("Время, над которым надо поработать: "+tenseList[0]);
             final AlertDialog dialog = builder.create();
             dialog.show();
         }else if(item==1){

@@ -59,7 +59,7 @@ public class ButtonAdapter extends BaseAdapter {
             btn = (Button) convertView;
         }
         btn.setText(list[position]);
-        btn.setTextColor(Color.BLACK);
+        btn.setTextColor(Color.WHITE);
         btn.setAllCaps(false);
         btn.setTextSize(15);
         btn.setId(position);

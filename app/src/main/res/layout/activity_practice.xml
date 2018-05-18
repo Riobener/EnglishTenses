@@ -5,7 +5,8 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical"
-    tools:context="riobener.englishtenses.PracticeActivity">
+    tools:context="riobener.englishtenses.PracticeActivity"
+    android:background="#075aaa">
 
     <RelativeLayout
         android:id="@+id/progressLayout"
@@ -30,10 +31,11 @@
             android:gravity="center"
             android:padding="8dp"
             android:textSize="30dp"
-            android:textColor="#000000"
+            android:textColor="#FFFFFF"
             android:textAllCaps="false"
             android:textStyle="bold"
-            android:text="Hello"/>
+            android:text="Hello"
+            android:background="#01295c"/>
 
 
     </RelativeLayout>
@@ -58,7 +60,6 @@
 
 
         <RadioGroup
-
             android:id="@+id/varOfAnswers"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"

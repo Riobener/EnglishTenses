@@ -106,6 +106,7 @@ public class PracticeActivity extends AppCompatActivity {
                 radButton[i] = new RadioButton(this);
                 radButton[i].setId(i+10);
                 radButton[i].setTextSize(25);
+                radButton[i].setTextColor(Color.WHITE);
                 radioGroup.addView(radButton[i],radioParams);
             }
 
@@ -115,6 +116,7 @@ public class PracticeActivity extends AppCompatActivity {
                 radButton[i] = new RadioButton(this);
                 radButton[i].setId(i+10);
                 radButton[i].setTextSize(25);
+                radButton[i].setTextColor(Color.WHITE);
                 radioGroup.addView(radButton[i]);
             }
 
@@ -132,7 +134,7 @@ public class PracticeActivity extends AppCompatActivity {
             timerText.setLayoutParams(relativeParams);
             timerText.setText("00:00");
             timerText.setTextSize(50);
-            timerText.setTextColor(Color.BLACK);
+            timerText.setTextColor(Color.WHITE);
             progressLayout.addView(timerText);
             startReadyDialogTimer();
             startPractice();
@@ -164,7 +166,7 @@ public class PracticeActivity extends AppCompatActivity {
             comboText.setLayoutParams(comboParams);
             comboText.setText("Комбо: "+combo);
             comboText.setTextSize(40);
-            comboText.setTextColor(Color.DKGRAY);
+            comboText.setTextColor(Color.WHITE);
             comboText.setTextAlignment(View.TEXT_ALIGNMENT_CENTER);
             progressLayout.addView(comboText);
             startPractice();
@@ -466,7 +468,6 @@ private boolean radioIsChecked(){
             bestComboNormal=combo;
             saveRecord("NORMAL_COMBO",bestComboNormal);
         }
-            Toast.makeText(this,""+bestComboNormal,Toast.LENGTH_SHORT).show();
 
         combo = 0;
         comboText.setText("Комбо: "+combo);
