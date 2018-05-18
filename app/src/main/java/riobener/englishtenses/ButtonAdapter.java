@@ -47,11 +47,12 @@ public class ButtonAdapter extends BaseAdapter {
         DisplayMetrics dm = new DisplayMetrics();
         ((Activity)mContext).getWindowManager().getDefaultDisplay().getMetrics(dm);
         int width = dm.widthPixels;
-
+        int height = dm.heightPixels;
+        double gv = height*3/4;
         Button btn;
         if (convertView == null) {
             btn = new Button(mContext);
-            btn.setLayoutParams(new GridView.LayoutParams(width/3-28, 250));
+            btn.setLayoutParams(new GridView.LayoutParams(width/3-28, (int) (gv/4-110)));
             btn.setPadding(20, 20, 20, 20);
         }
         else {

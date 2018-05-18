@@ -1,0 +1,42 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:orientation="vertical" android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:id="@+id/dialogLayout">
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Результаты:"
+        android:textAlignment="center"
+        android:textSize="40dp"
+        android:textAllCaps="false"
+        android:textColor="#000000"/>
+    <TextView
+        android:id="@+id/bestCombo"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="20dp"
+        android:layout_marginLeft="5dp"
+        android:layout_marginBottom="30dp"
+        android:text="Максимальное комбо:"
+        android:textSize="25dp"
+        android:textColor="#000000"/>
+    <TextView
+        android:id="@+id/bestRatio"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Лучшее соотношение:"
+        android:textSize="25dp"
+        android:layout_marginLeft="5dp"
+        android:textColor="#000000"
+        android:layout_marginBottom="30dp"/>
+    <TextView
+        android:id="@+id/problemTense"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Время, над которым надо поработать:"
+        android:textSize="25dp"
+        android:layout_marginLeft="5dp"
+        android:textColor="#000000"
+        android:layout_marginBottom="20dp"/>
+</LinearLayout>

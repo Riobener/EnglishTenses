@@ -1,6 +1,6 @@
 <resources>
     <string name="app_name">English Tenses</string>
-    <string name="title_activity_info">InfoActivity</string>
+
 
     <string name="Present_Simple">
        "<b>Present Simple</b> - время в английском языке.

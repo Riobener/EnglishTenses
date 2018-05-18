@@ -26,18 +26,19 @@ public class StartActivity extends AppCompatActivity {
     GridView gridview;
     Button practiceButton;
     Intent practiceIntent;
+    Intent statisticsIntent;
     Bundle extras;
     int chosenItem = -1;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        requestWindowFeature(Window.FEATURE_NO_TITLE);
         getWindow().addFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN);
         setContentView(R.layout.activity_start);
         setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);
         extras = new Bundle();
         practiceIntent = new Intent(this, PracticeActivity.class);
+        statisticsIntent = new Intent(this,StatisticsActivity.class);
         gridview = (GridView) findViewById(R.id.gridview);
         gridview.setAdapter(new ButtonAdapter(this, tenseList));
         practiceButton = (Button) findViewById(R.id.practice);
@@ -49,8 +50,6 @@ public class StartActivity extends AppCompatActivity {
         });
     }
 
-
-
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         getMenuInflater().inflate(R.menu.action_menu, menu);
@@ -60,9 +59,9 @@ public class StartActivity extends AppCompatActivity {
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
        if(item.getItemId()==R.id.statistic){
-           Toast.makeText(StartActivity.this,"Когда-нибудь доделаю...",Toast.LENGTH_LONG).show();
+            startActivity(statisticsIntent);
        }
-                return super.onOptionsItemSelected(item);
+        return super.onOptionsItemSelected(item);
         }
        void showPracticeOptions(){
            AlertDialog.Builder alert = new AlertDialog.Builder(this);
@@ -82,16 +81,17 @@ public class StartActivity extends AppCompatActivity {
                        extras.putInt("mode",0);
                        practiceIntent.putExtras(extras);
                        startActivity(practiceIntent);
+                       finish();
 
                    }else if(chosenItem==1){
                        chosenItem = -1;
                        showTimeModeOptions();
-
                    }else if(chosenItem==2){
                        chosenItem = -1;
                        extras.putInt("mode",2);
                        practiceIntent.putExtras(extras);
                        startActivity(practiceIntent);
+                       finish();
                    }else if(chosenItem==-1){
                        chosenItem =-1;
                        showPracticeOptions();
@@ -142,7 +142,7 @@ public class StartActivity extends AppCompatActivity {
                             extras.putInt("time",30000);
                             practiceIntent.putExtras(extras);
                             startActivity(practiceIntent);
-
+                            finish();
                             break;
                         case 1:
                             chosenItem = -1;
@@ -150,7 +150,7 @@ public class StartActivity extends AppCompatActivity {
                             extras.putInt("time",60000);
                             practiceIntent.putExtras(extras);
                             startActivity(practiceIntent);
-
+                            finish();
                             break;
                         case 2:
                             chosenItem = -1;
@@ -158,7 +158,7 @@ public class StartActivity extends AppCompatActivity {
                             extras.putInt("time",120000);
                             practiceIntent.putExtras(extras);
                             startActivity(practiceIntent);
-
+                            finish();
                             break;
                     }
                 }
